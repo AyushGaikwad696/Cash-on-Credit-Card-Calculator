@@ -1,0 +1,167 @@
+<div class="calculator-shell">
+  <mat-toolbar class="page-toolbar">
+    <span>Cash on Credit Card Calculator</span>
+  </mat-toolbar>
+
+  <section class="calculator-page">
+    <mat-card class="hero-card">
+      <div class="hero-copy">
+        <p class="eyebrow">Charge Estimator</p>
+        <h1>Calculate customer charges and agent profit with confidence.</h1>
+        <p class="hero-description">
+          Enter the transaction amount, percentages, and fee to see exactly how much the
+          customer pays, how much is held back as extra amount, and what remains as profit.
+        </p>
+      </div>
+    </mat-card>
+
+    <div class="calculator-grid">
+      <mat-card class="form-card">
+        <h2>Calculator</h2>
+        <p class="section-description">
+          All fields are required. Percentages and fees must be zero or greater.
+        </p>
+
+        <form [formGroup]="calculatorForm" (ngSubmit)="calculateCharges()">
+          <div class="form-grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Transaction Amount</mat-label>
+              <input
+                matInput
+                type="number"
+                min="0"
+                formControlName="amount"
+                placeholder="Enter amount"
+              />
+              <mat-error *ngIf="amountControl.invalid && amountControl.touched">
+                {{ getErrorMessage(amountControl, 'Transaction amount') }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Customer Percentage (%)</mat-label>
+              <input
+                matInput
+                type="number"
+                min="0"
+                formControlName="customerPercent"
+                placeholder="Enter customer percentage"
+              />
+              <mat-error
+                *ngIf="customerPercentControl.invalid && customerPercentControl.touched"
+              >
+                {{ getErrorMessage(customerPercentControl, 'Customer percentage') }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Transaction Fee</mat-label>
+              <input
+                matInput
+                type="number"
+                min="0"
+                formControlName="transactionFee"
+                placeholder="Enter transaction fee"
+              />
+              <mat-hint>Default value: {{ defaultTransactionFee | number:'1.2-2' }}</mat-hint>
+              <mat-error
+                *ngIf="transactionFeeControl.invalid && transactionFeeControl.touched"
+              >
+                {{ getErrorMessage(transactionFeeControl, 'Transaction fee') }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Company Percentage (%)</mat-label>
+              <input
+                matInput
+                type="number"
+                min="0"
+                formControlName="companyPercent"
+                placeholder="Enter company percentage"
+              />
+              <mat-hint>Default value: {{ defaultCompanyPercentage | number:'1.1-1' }}%</mat-hint>
+              <mat-error
+                *ngIf="companyPercentControl.invalid && companyPercentControl.touched"
+              >
+                {{ getErrorMessage(companyPercentControl, 'Company percentage') }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="action-row">
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit"
+              [disabled]="calculatorForm.invalid"
+            >
+              Calculate
+            </button>
+
+            <button mat-stroked-button type="button" (click)="resetForm()">
+              Reset
+            </button>
+          </div>
+        </form>
+      </mat-card>
+
+      <mat-card class="results-card" [class.has-results]="!!result">
+        <div class="results-header">
+          <h2>Results</h2>
+          <p class="section-description">
+            Values are displayed with two decimal places.
+          </p>
+        </div>
+
+        <ng-container *ngIf="result; else emptyState">
+          <div class="result-list">
+            <div class="result-item">
+              <span>Extra amount customer pays</span>
+              <strong>{{ result.extraAmount | number:'1.2-2' }}</strong>
+            </div>
+            <mat-divider></mat-divider>
+
+            <div class="result-item">
+              <span>Amount agent will send to customer</span>
+              <strong>{{ result.amountSentToCustomer | number:'1.2-2' }}</strong>
+            </div>
+            <mat-divider></mat-divider>
+
+            <!-- <div class="result-item">
+              <span>Total amount customer pays</span>
+              <strong>{{ result.totalCustomerPays | number:'1.2-2' }}</strong>
+            </div>
+            <mat-divider></mat-divider> -->
+
+            <div class="result-item">
+              <span>Company share</span>
+              <strong>{{ result.companyShare | number:'1.2-2' }}</strong>
+            </div>
+            <mat-divider></mat-divider>
+
+            <div class="result-item">
+              <span>Transaction fee</span>
+              <strong>{{ result.transactionFee | number:'1.2-2' }}</strong>
+            </div>
+            <mat-divider></mat-divider>
+
+            
+
+            <div class="result-item result-item--profit">
+              <span>Agent profit after company share and fee</span>
+              <strong>{{ result.agentProfit | number:'1.2-2' }}</strong>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-template #emptyState>
+          <div class="empty-state">
+            <p>No calculation yet.</p>
+            <span>Submit valid values to see the full charge breakdown.</span>
+          </div>
+        </ng-template>
+      </mat-card>
+    </div>
+  </section>
+</div>

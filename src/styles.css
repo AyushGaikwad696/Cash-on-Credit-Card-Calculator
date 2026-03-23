@@ -1,0 +1,33 @@
+:root {
+  --app-bg: #f4f7fb;
+  --app-surface: rgba(255, 255, 255, 0.9);
+  --app-text: #132238;
+  --app-muted: #58687a;
+  --app-border: rgba(19, 34, 56, 0.08);
+  --app-shadow: 0 24px 80px rgba(26, 50, 77, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+  color: var(--app-text);
+  background:
+    radial-gradient(circle at top left, rgba(58, 111, 180, 0.18), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(19, 34, 56, 0.12), transparent 24%),
+    linear-gradient(180deg, #f7fafc 0%, #edf3f8 100%);
+  overflow: hidden;
+}
+
+button,
+input {
+  font: inherit;
+}
