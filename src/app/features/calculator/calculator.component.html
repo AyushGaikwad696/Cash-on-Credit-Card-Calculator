@@ -1,9 +1,13 @@
+<!-- Main calculator shell container -->
 <div class="calculator-shell">
-  <mat-toolbar class="page-toolbar">
+  <!-- Page header toolbar -->
+  <mat-toolbar class="page-toolbar" role="banner">
     <span>Cash on Credit Card Calculator</span>
   </mat-toolbar>
 
-  <section class="calculator-page">
+  <!-- Main calculator content area -->
+  <section class="calculator-page" aria-label="Calculator">
+    <!-- Hero section with description -->
     <mat-card class="hero-card">
       <div class="hero-copy">
         <p class="eyebrow">Charge Estimator</p>
@@ -15,15 +19,18 @@
       </div>
     </mat-card>
 
+    <!-- Calculator grid layout -->
     <div class="calculator-grid">
+      <!-- Input form card -->
       <mat-card class="form-card">
         <h2>Calculator</h2>
         <p class="section-description">
-          All fields are required. Percentages and fees must be zero or greater.
+          Enter the amount and charges to compare both payout scenarios.
         </p>
 
-        <form [formGroup]="calculatorForm" (ngSubmit)="calculateCharges()">
+        <form [formGroup]="calculatorForm" (ngSubmit)="calculateCharges()" aria-label="Calculator form">
           <div class="form-grid">
+            <!-- Transaction amount input -->
             <mat-form-field appearance="outline">
               <mat-label>Transaction Amount</mat-label>
               <input
@@ -32,12 +39,14 @@
                 min="0"
                 formControlName="amount"
                 placeholder="Enter amount"
+                aria-label="Transaction amount"
               />
               <mat-error *ngIf="amountControl.invalid && amountControl.touched">
                 {{ getErrorMessage(amountControl, 'Transaction amount') }}
               </mat-error>
             </mat-form-field>
 
+            <!-- Customer percentage input -->
             <mat-form-field appearance="outline">
               <mat-label>Customer Percentage (%)</mat-label>
               <input
@@ -46,6 +55,7 @@
                 min="0"
                 formControlName="customerPercent"
                 placeholder="Enter customer percentage"
+                aria-label="Customer percentage"
               />
               <mat-error
                 *ngIf="customerPercentControl.invalid && customerPercentControl.touched"
@@ -54,6 +64,7 @@
               </mat-error>
             </mat-form-field>
 
+            <!-- Transaction fee input -->
             <mat-form-field appearance="outline">
               <mat-label>Transaction Fee</mat-label>
               <input
@@ -62,6 +73,7 @@
                 min="0"
                 formControlName="transactionFee"
                 placeholder="Enter transaction fee"
+                aria-label="Transaction fee"
               />
               <mat-hint>Default value: {{ defaultTransactionFee | number:'1.2-2' }}</mat-hint>
               <mat-error
@@ -71,6 +83,7 @@
               </mat-error>
             </mat-form-field>
 
+            <!-- Company percentage input -->
             <mat-form-field appearance="outline">
               <mat-label>Company Percentage (%)</mat-label>
               <input
@@ -79,6 +92,7 @@
                 min="0"
                 formControlName="companyPercent"
                 placeholder="Enter company percentage"
+                aria-label="Company percentage"
               />
               <mat-hint>Default value: {{ defaultCompanyPercentage | number:'1.1-1' }}%</mat-hint>
               <mat-error
@@ -89,76 +103,136 @@
             </mat-form-field>
           </div>
 
+          <!-- Form action buttons -->
           <div class="action-row">
             <button
               mat-flat-button
               color="primary"
               type="submit"
               [disabled]="calculatorForm.invalid"
+              aria-label="Calculate charges"
             >
               Calculate
             </button>
 
-            <button mat-stroked-button type="button" (click)="resetForm()">
+            <button 
+              mat-stroked-button 
+              type="button" 
+              (click)="resetForm()"
+              aria-label="Reset form"
+            >
               Reset
             </button>
           </div>
         </form>
       </mat-card>
 
-      <mat-card class="results-card" [class.has-results]="!!result">
+      <!-- Standard charge results card -->
+      <mat-card class="results-card" [class.has-results]="!!standardChargeResult">
         <div class="results-header">
-          <h2>Results</h2>
-          <p class="section-description">
-            Values are displayed with two decimal places.
-          </p>
+          <p class="results-kicker">Scenario 1</p>
+          <h2>Standard Charge Breakdown</h2>
         </div>
 
-        <ng-container *ngIf="result; else emptyState">
+        <ng-container *ngIf="standardChargeResult; else emptyStateStandard">
+          <!-- Summary section -->
+          <div class="result-summary result-summary--primary">
+            <div class="result-summary__item">
+              <span>Amount customer gives</span>
+              <strong>{{ standardChargeResult.baseAmount | number:'1.2-2' }}</strong>
+            </div>
+            <div class="result-summary__item">
+              <span>Amount customer receives</span>
+              <strong>{{ standardChargeResult.amountSentToCustomer | number:'1.2-2' }}</strong>
+            </div>
+          </div>
+
+          <!-- Detailed breakdown -->
           <div class="result-list">
             <div class="result-item">
-              <span>Extra amount customer pays</span>
-              <strong>{{ result.extraAmount | number:'1.2-2' }}</strong>
+              <span>Extra charge paid by customer</span>
+              <strong>{{ standardChargeResult.extraAmount | number:'1.2-2' }}</strong>
             </div>
             <mat-divider></mat-divider>
-
-            <div class="result-item">
-              <span>Amount agent will send to customer</span>
-              <strong>{{ result.amountSentToCustomer | number:'1.2-2' }}</strong>
-            </div>
-            <mat-divider></mat-divider>
-
-            <!-- <div class="result-item">
-              <span>Total amount customer pays</span>
-              <strong>{{ result.totalCustomerPays | number:'1.2-2' }}</strong>
-            </div>
-            <mat-divider></mat-divider> -->
 
             <div class="result-item">
               <span>Company share</span>
-              <strong>{{ result.companyShare | number:'1.2-2' }}</strong>
+              <strong>{{ standardChargeResult.companyShare | number:'1.2-2' }}</strong>
             </div>
             <mat-divider></mat-divider>
 
             <div class="result-item">
               <span>Transaction fee</span>
-              <strong>{{ result.transactionFee | number:'1.2-2' }}</strong>
+              <strong>{{ standardChargeResult.transactionFee | number:'1.2-2' }}</strong>
             </div>
             <mat-divider></mat-divider>
 
-            
-
             <div class="result-item result-item--profit">
-              <span>Agent profit after company share and fee</span>
-              <strong>{{ result.agentProfit | number:'1.2-2' }}</strong>
+              <span>Agent profit</span>
+              <strong>{{ standardChargeResult.agentProfit | number:'1.2-2' }}</strong>
             </div>
           </div>
         </ng-container>
 
-        <ng-template #emptyState>
+        <ng-template #emptyStateStandard>
           <div class="empty-state">
-            <p>No calculation yet.</p>
-            <span>Submit valid values to see the full charge breakdown.</span>
+            <p>No result yet.</p>
+            <span>Enter values and calculate to see the standard charge breakdown.</span>
+          </div>
+        </ng-template>
+      </mat-card>
+
+      <!-- Exact payout results card -->
+      <mat-card class="results-card" [class.has-results]="!!exactPayoutResult">
+        <div class="results-header">
+          <p class="results-kicker">Scenario 2</p>
+          <h2>Exact Payout Breakdown</h2>
+        </div>
+
+        <ng-container *ngIf="exactPayoutResult; else emptyStateExact">
+          <!-- Summary section -->
+          <div class="result-summary result-summary--accent">
+            <div class="result-summary__item">
+              <span>Amount customer gives</span>
+              <strong>{{ exactPayoutResult.baseAmount | number:'1.2-2' }}</strong>
+            </div>
+            <div class="result-summary__item">
+              <span>Amount customer receives</span>
+              <strong>{{ exactPayoutResult.amountSentToCustomer | number:'1.2-2' }}</strong>
+            </div>
+          </div>
+
+          <!-- Detailed breakdown -->
+          <div class="result-list">
+            <div class="result-item">
+              <span>Extra charge paid by customer</span>
+              <strong>{{ exactPayoutResult.extraAmount | number:'1.2-2' }}</strong>
+            </div>
+            <mat-divider></mat-divider>
+
+            <div class="result-item">
+              <span>Company share</span>
+              <strong>{{ exactPayoutResult.companyShare | number:'1.2-2' }}</strong>
+            </div>
+            <mat-divider></mat-divider>
+
+            <div class="result-item">
+              <span>Transaction fee</span>
+              <strong>{{ exactPayoutResult.transactionFee | number:'1.2-2' }}</strong>
+            </div>
+            <mat-divider></mat-divider>
+
+            <div class="result-item result-item--profit">
+              <span>Agent profit</span>
+              <strong>{{ exactPayoutResult.agentProfit | number:'1.2-2' }}</strong>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-template #emptyStateExact>
+          <div class="empty-state">
+            <p>No result yet.</p>
+            <span>Enter values and calculate to see the exact payout breakdown.</span>
           </div>
         </ng-template>
       </mat-card>

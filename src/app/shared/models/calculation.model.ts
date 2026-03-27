@@ -6,6 +6,7 @@ export interface CalculatorFormValue {
 }
 
 export interface CalculationResult {
+  baseAmount: number;
   extraAmount: number;
   totalCustomerPays: number;
   companyShare: number;

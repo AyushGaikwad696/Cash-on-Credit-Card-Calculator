@@ -12,15 +12,19 @@ A clean Angular application for calculating charges in a cash-on-credit-card bus
   - Customer Percentage
   - Transaction Fee
   - Company Percentage
-- Result summary for:
-  - Extra amount customer pays
-  - Total amount customer pays
+- **Two calculation scenarios:**
+  - **Standard Charge Breakdown:** Shows how much the customer pays and what the agent receives
+  - **Exact Payout Breakdown:** Calculates the exact amount needed to send a specific amount to the customer
+- Result summary for each scenario:
+  - Amount customer gives
+  - Amount customer receives
+  - Extra charge paid by customer
   - Company share
   - Transaction fee
-  - Amount agent will send to customer
-  - Agent profit after deductions
+  - Agent profit
 - Reset button
-- Responsive layout
+- Responsive layout with mobile scrolling support
+- Accessibility improvements (ARIA labels)
 
 ## Business Logic
 
@@ -30,6 +34,8 @@ Given:
 - `customerPercent` = percentage charged to customer
 - `companyPercent` = percentage charged by company
 - `transactionFee` = editable fixed fee
+
+### Standard Charge Calculation
 
 Calculations:
 
@@ -45,6 +51,26 @@ Example:
 - Customer Percentage: `2`
 - Extra Amount: `1000`
 - Amount Sent to Customer: `49000`
+
+### Exact Payout Calculation
+
+When you want to send a specific amount to the customer, this calculation determines how much the customer needs to pay:
+
+- `baseAmount = amount / (1 - customerPercent/100)`
+- `extraAmount = (baseAmount * customerPercent) / 100`
+- `totalCustomerPays = baseAmount + extraAmount`
+- `companyShare = (baseAmount * companyPercent) / 100`
+- `amountSentToCustomer = amount` (exact amount specified)
+- `agentProfit = extraAmount - companyShare - transactionFee`
+
+Example:
+
+- Desired Amount to Customer: `2500`
+- Customer Percentage: `4`
+- Base Amount: `2604.17`
+- Extra Amount: `104.17`
+- Total Customer Pays: `2708.33`
+- Amount Sent to Customer: `2500`
 
 ## Tech Stack
 
@@ -138,4 +164,4 @@ gh repo create cash-on-credit-card --public --source=. --remote=origin --push
 
 ## Notes
 
-This project was structured to keep business logic inside the calculation service and keep the component focused on UI and form handling.
+This project was structured to keep business logic inside the calculation service and keep the component focused on UI and form handling. The application now supports two calculation scenarios to help agents understand both standard charges and exact payout requirements.

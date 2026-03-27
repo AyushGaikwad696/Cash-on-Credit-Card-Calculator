@@ -1,6 +1,22 @@
+/* ==========================================================================
+   Calculator Component Styles
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Layout & Shell
+   -------------------------------------------------------------------------- */
+
 .calculator-shell {
   min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
 }
+
+/* --------------------------------------------------------------------------
+   Page Toolbar
+   -------------------------------------------------------------------------- */
 
 .page-toolbar {
   position: sticky;
@@ -13,13 +29,25 @@
   box-shadow: 0 12px 30px rgba(19, 34, 56, 0.18);
 }
 
+/* --------------------------------------------------------------------------
+   Calculator Page Layout
+   -------------------------------------------------------------------------- */
+
 .calculator-page {
-  max-width: 1120px;
+  max-width: 1440px;
   margin: 0 auto;
   display: grid;
   gap: 15px;
-  padding: 20px 16px 48px;
+  padding: 20px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  flex: 1;
 }
+
+/* --------------------------------------------------------------------------
+   Card Styles
+   -------------------------------------------------------------------------- */
 
 .hero-card,
 .form-card,
@@ -30,8 +58,12 @@
   box-shadow: var(--app-shadow);
 }
 
+/* --------------------------------------------------------------------------
+   Hero Section
+   -------------------------------------------------------------------------- */
+
 .hero-card {
-  overflow: hidden;
+  /* overflow: hidden; */
   background:
     linear-gradient(135deg, rgba(23, 50, 78, 0.96), rgba(45, 95, 143, 0.88)),
     linear-gradient(180deg, #1e4d77 0%, #17324e 100%);
@@ -53,25 +85,31 @@
 
 .hero-copy h1 {
   margin: 0;
-  max-width: 680px;
   font-size: clamp(1.85rem, 2vw, 2.8rem);
   line-height: 1.15;
 }
 
 .hero-description {
   margin: 16px 0 0;
-  max-width: 640px;
   font-size: 1rem;
   line-height: 1.7;
   color: rgba(242, 247, 252, 0.84);
 }
 
+/* --------------------------------------------------------------------------
+   Calculator Grid Layout
+   -------------------------------------------------------------------------- */
+
 .calculator-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+  grid-template-columns: minmax(320px, 1.05fr) minmax(320px, 1fr) minmax(320px, 1fr);
   gap: 24px;
   align-items: start;
 }
+
+/* --------------------------------------------------------------------------
+   Form Card
+   -------------------------------------------------------------------------- */
 
 .form-card,
 .results-card {
@@ -90,6 +128,10 @@
   line-height: 1.6;
 }
 
+/* --------------------------------------------------------------------------
+   Form Grid
+   -------------------------------------------------------------------------- */
+
 .form-grid {
   display: grid;
   gap: 18px;
@@ -99,12 +141,20 @@
   width: 100%;
 }
 
+/* --------------------------------------------------------------------------
+   Action Row
+   -------------------------------------------------------------------------- */
+
 .action-row {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
   margin-top: 8px;
 }
+
+/* --------------------------------------------------------------------------
+   Results Card
+   -------------------------------------------------------------------------- */
 
 .results-card {
   min-height: 100%;
@@ -120,10 +170,69 @@
   margin-bottom: 20px;
 }
 
+.results-kicker {
+  margin: 0 0 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #2d5f8f;
+}
+
+/* --------------------------------------------------------------------------
+   Result List
+   -------------------------------------------------------------------------- */
+
 .result-list {
   display: grid;
   gap: 12px;
 }
+
+/* --------------------------------------------------------------------------
+   Result Summary
+   -------------------------------------------------------------------------- */
+
+.result-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 14px;
+  border-radius: 18px;
+}
+
+.result-summary--primary {
+  background: linear-gradient(135deg, rgba(24, 58, 90, 0.96), rgba(45, 95, 143, 0.92));
+}
+
+.result-summary--accent {
+  background: linear-gradient(135deg, rgba(16, 78, 78, 0.96), rgba(27, 126, 113, 0.92));
+}
+
+.result-summary__item {
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.result-summary__item span {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.result-summary__item strong {
+  font-size: 1.45rem;
+  line-height: 1.15;
+  color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   Result Item
+   -------------------------------------------------------------------------- */
 
 .result-item {
   display: flex;
@@ -145,6 +254,10 @@
 .result-item--profit strong {
   color: #0c5f3c;
 }
+
+/* --------------------------------------------------------------------------
+   Empty State
+   -------------------------------------------------------------------------- */
 
 .empty-state {
   display: grid;
@@ -168,21 +281,146 @@
   line-height: 1.6;
 }
 
+/* --------------------------------------------------------------------------
+   Responsive Breakpoints
+   -------------------------------------------------------------------------- */
+
+/* Tablet landscape and smaller desktops */
+@media (max-width: 1200px) {
+  .calculator-grid {
+    grid-template-columns: minmax(300px, 1fr) minmax(300px, 1fr);
+  }
+
+  .calculator-grid .results-card:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Tablet portrait */
 @media (max-width: 900px) {
   .calculator-grid {
     grid-template-columns: 1fr;
   }
+
+  .calculator-grid .results-card:last-child {
+    grid-column: auto;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+  }
 }
 
+/* Mobile landscape */
 @media (max-width: 600px) {
+  .calculator-page {
+    padding: 16px;
+    gap: 12px;
+    scroll-padding-top: 80px;
+  }
+
   .hero-copy,
   .form-card,
   .results-card {
-    padding: 20px;
+    padding: 16px;
+  }
+
+  .hero-copy h1 {
+    font-size: 1.4rem;
+  }
+
+  .hero-description {
+    font-size: 0.9rem;
+  }
+
+  .form-card h2,
+  .results-card h2 {
+    font-size: 1.2rem;
+  }
+
+  .section-description {
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+  }
+
+  .form-grid {
+    gap: 12px;
+  }
+
+  .action-row {
+    flex-direction: column;
+  }
+
+  .action-row button {
+    width: 100%;
+  }
+
+  .result-summary {
+    grid-template-columns: 1fr;
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .result-summary__item {
+    padding: 10px 12px;
+  }
+
+  .result-summary__item strong {
+    font-size: 1.2rem;
   }
 
   .result-item {
     flex-direction: column;
     align-items: flex-start;
+    gap: 4px;
+    padding: 6px 0;
+  }
+
+  .result-item strong {
+    font-size: 1rem;
+  }
+
+  .empty-state {
+    min-height: 200px;
+    padding: 16px;
+  }
+
+  .empty-state p {
+    font-size: 1rem;
+  }
+}
+
+/* Mobile portrait */
+@media (max-width: 400px) {
+  .calculator-page {
+    padding: 12px;
+    scroll-padding-top: 80px;
+  }
+
+  .hero-copy,
+  .form-card,
+  .results-card {
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  .hero-copy h1 {
+    font-size: 1.25rem;
+  }
+
+  .eyebrow {
+    font-size: 0.75rem;
+  }
+
+  .results-kicker {
+    font-size: 0.7rem;
+  }
+
+  .result-summary__item span {
+    font-size: 0.75rem;
+  }
+
+  .result-summary__item strong {
+    font-size: 1.1rem;
   }
 }
