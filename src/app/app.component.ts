@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { PwaService } from './core/services/pwa.service';
+
 @Component({
   standalone: false,
   selector: 'app-root',
@@ -7,4 +9,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrl: './app.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent {}
+export class AppComponent {
+  constructor(private readonly pwaService: PwaService) {
+    void this.pwaService;
+  }
+}
